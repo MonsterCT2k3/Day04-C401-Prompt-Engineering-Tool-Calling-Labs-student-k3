@@ -21,7 +21,7 @@
           {
             "name": "weather",
             "args": {
-              "city": "Hanoi"
+              "city": "Hà Nội"
             }
           }
         ]
@@ -78,7 +78,7 @@
           {
             "name": "policy",
             "args": {
-              "query": "bảo mật dữ liệu",
+              "query": "bảo mật dữ liệu riêng tư",
               "policy_area": "data_privacy"
             }
           }
@@ -126,7 +126,7 @@
           {
             "name": "weather",
             "args": {
-              "city": "Da Nang"
+              "city": "Đà Nẵng"
             }
           }
         ]
