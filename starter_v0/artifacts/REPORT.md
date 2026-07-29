@@ -1,12 +1,15 @@
 # Day 04 Lab v2 Report — Research Agent
 
 ## Team
+- **Team Name**: AI20k - Group Research Agent
+- **Provider/Model**: NVIDIA NIM / `meta/llama-3.1-70b-instruct`
 
-Nguyễn Đăng Nam - 2A202601307
-Nguyễn Hữu Tuyền - 2A202601605
-Tống Nguyễn Minh Khang - 2A202601101
-Đậu Quốc Duy - 2A202601445
-Lê Chí Anh Tuấn - 2A202601149
+**Members:**
+1. Nguyễn Đăng Nam - 2A202601307
+2. Nguyễn Hữu Tuyền - 2A202601605
+3. Tống Nguyễn Minh Khang - 2A202601101
+4. Đậu Quốc Duy - 2A202601445
+5. Lê Chí Anh Tuấn - 2A202601149
 
 ---
 
