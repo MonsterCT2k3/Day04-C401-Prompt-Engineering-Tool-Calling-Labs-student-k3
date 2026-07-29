@@ -10,5 +10,4 @@ side_effect: false
 ---
 # lookup
 
-Searches the web via Tavily. Has a `topic` (`general` or `news`) and a
-`timeframe` argument.
+Searches the web via Tavily. Has a `topic` (`general` or `news`, default `general`) and a `timeframe` argument. You can also specify `max_results` to limit the number of results returned. If you search for news, use `topic=news`. Timeframe can be `day`, `week`, `month`, or `year`. 
