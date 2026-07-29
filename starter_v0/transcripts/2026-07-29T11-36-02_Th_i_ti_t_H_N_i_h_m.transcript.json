@@ -1,0 +1,73 @@
+{
+  "session_id": "2026-07-29T11-36-02",
+  "provider": "nvidia",
+  "version": "v1",
+  "artifact_version": "v1+p25bb6d647483+t15beeffe7c94",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Thời tiết Hà Nội hôm nay thế nào?"
+    },
+    {
+      "role": "assistant",
+      "content": "Thời tiết Hà Nội hôm nay là 29.1 độ C với tình trạng mây và mưa, gió thổi ở mức 5.2 km/h."
+    }
+  ],
+  "last_loop_result": {
+    "status": "answered",
+    "assistant_text": "Thời tiết Hà Nội hôm nay là 29.1 độ C với tình trạng mây và mưa, gió thổi ở mức 5.2 km/h.",
+    "rounds": [
+      {
+        "round": 1,
+        "assistant_text": null,
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hanoi"
+            }
+          }
+        ],
+        "tool_results": [
+          {
+            "tool": "weather",
+            "args": {
+              "city": "Hanoi"
+            },
+            "result": {
+              "tool": "weather",
+              "city": "Hanoi, Vietnam",
+              "temperature_c": 29.1,
+              "condition": "Cloudy / Rain",
+              "wind_kph": 5.2,
+              "status": "success"
+            }
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "assistant_text": "Thời tiết Hà Nội hôm nay là 29.1 độ C với tình trạng mây và mưa, gió thổi ở mức 5.2 km/h.",
+        "tool_calls": [],
+        "tool_results": []
+      }
+    ],
+    "tool_events": [
+      {
+        "tool": "weather",
+        "args": {
+          "city": "Hanoi"
+        },
+        "result": {
+          "tool": "weather",
+          "city": "Hanoi, Vietnam",
+          "temperature_c": 29.1,
+          "condition": "Cloudy / Rain",
+          "wind_kph": 5.2,
+          "status": "success"
+        }
+      }
+    ]
+  },
+  "updated_at": "2026-07-29T11:37:17"
+}

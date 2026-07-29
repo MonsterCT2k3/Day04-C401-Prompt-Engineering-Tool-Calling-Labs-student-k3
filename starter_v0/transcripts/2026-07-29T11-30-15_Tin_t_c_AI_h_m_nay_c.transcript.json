@@ -1,0 +1,146 @@
+{
+  "session_id": "2026-07-29T11-30-15",
+  "provider": "nvidia",
+  "version": "v1",
+  "artifact_version": "v1+p25bb6d647483+t15beeffe7c94",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Tin tức AI hôm nay có gì nổi bật trên web?"
+    },
+    {
+      "role": "assistant",
+      "content": "Dưới đây là những tin tức nổi bật về AI trên web trong tuần này:\n\n*   AI’s Early Winners Are Shopping For Their Next Big Moves - Forbes\n*   AI innovation is outpacing governance, leaving companies exposed, EqualAI warns - Fox Business\n*   5U AI scales up new digital workforce platform - American Journal of Transportation\n*   Japan expands physical AI strategy - The Manila Times\n*   Moburst develops AI engine optimization capabilities for established companies - TechCrunch"
+    }
+  ],
+  "last_loop_result": {
+    "status": "answered",
+    "assistant_text": "Dưới đây là những tin tức nổi bật về AI trên web trong tuần này:\n\n*   AI’s Early Winners Are Shopping For Their Next Big Moves - Forbes\n*   AI innovation is outpacing governance, leaving companies exposed, EqualAI warns - Fox Business\n*   5U AI scales up new digital workforce platform - American Journal of Transportation\n*   Japan expands physical AI strategy - The Manila Times\n*   Moburst develops AI engine optimization capabilities for established companies - TechCrunch",
+    "rounds": [
+      {
+        "round": 1,
+        "assistant_text": null,
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news"
+            }
+          }
+        ],
+        "tool_results": [
+          {
+            "tool": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news"
+            },
+            "result": {
+              "tool": "web_search",
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "week",
+              "items": [
+                {
+                  "title": "AI’s Early Winners Are Shopping For Their Next Big Moves - Forbes",
+                  "url": "https://www.forbes.com/sites/the-prompt/2026/07/28/ais-early-winners-are-shopping-for-their-next-big-moves/",
+                  "source": "forbes.com",
+                  "summary": "# AI’s Early Winners Are Shopping For Their Next Big Moves. AI startups Midjourney, World Labs and Cognition all announced acquisitions this week. Early winners of the AI wave are on a bit of a shopping spree. The idea is to bring Poke’s personality to Cognition’s coding agent Devin: “It’s proactive, it knows you, and it’s fun to talk to. And Bloomberg reported this week that Midjourney, best known for its AI image generator, acquired popular astrology app Co-Star this spring, as it plans to build its first standalone app. That’s just one of eight new projects the AI startup is pursuing, including a spa with full-body ultrasound machines it plans to open in San Francisco next year (yes, you read that right). Two of OpenAI’s most advanced AI agents **slipped out of the company’s controls** and **hacked into AI startup Hugging Face** to steal the answers for an internal test that evaluated its cyber skills, the company disclosed last week.",
+                  "score": 0.30728576
+                },
+                {
+                  "title": "AI innovation is outpacing governance, leaving companies exposed, EqualAI warns - Fox Business",
+                  "url": "https://www.foxbusiness.com/technology/ai-innovation-outpacing-governance-leaving-companies-exposed-equalai-warns",
+                  "source": "foxbusiness.com",
+                  "summary": "This week saw a high-profile incident involving AI, in which an internal test of AI models by ChatGPT-maker OpenAI resulted in the models exploiting a software flaw, escaping containment and hacking into Hugging Face, which operates a platform for developers to collaborate on code for AI models, to cheat on a cybersecurity evaluation. EqualAI CEO Miriam Vogel, whose organization released a white paper on AI governance and deployment this week, told FOX Business, \"Innovation is going at an unprecedented pace; the problem is governance is not matching that pace.\". \"While this is, in this instance, an issue for a development company, a lot of where this is playing out and will continue to play out is with the deployer – is with the healthcare, finance, social media, infrastructure – all the other ways [companies are] using agentic AI,\" Vogel said. Companies need to have visibility into the AI tools being used at all levels of a business and across its various divisions to establish governance, Vogel said.",
+                  "score": 0.2738345
+                },
+                {
+                  "title": "5U AI scales up new digital workforce platform - American Journal of Transportation",
+                  "url": "https://www.ajot.com/news/5u-ai-scales-up-new-digital-workforce-platform",
+                  "source": "ajot.com",
+                  "summary": "“We are not building another chatbot that answers questions and disappears, we are building AI Workers that understand freight operations, carry out the work, and capture the reasoning behind every decision, so teams can scale their knowledge as well as their capacity.”. 5U AI works inside existing freight systems and uses multi-agent AI trained for logistics workflows, including the complex exceptions and manual decisions that make forwarding operations difficult to automate with generic AI tools or legacy automation. The company is already live with forwarders and carriers across Europe, including with TCI International Logistics, where its AI Workers are being used across air and ocean freight operations. 5U AI is growing its team as part of the scale-up, with plans to hire across product, engineering, operations, commercial, and customer functions. “AI is one of the most exciting developments logistics has seen for a generation, but its value will depend on people who understand the industry and want to build practical tools that solve real operational problems,” said Abik.",
+                  "score": 0.2506701
+                },
+                {
+                  "title": "Japan expands physical AI strategy - The Manila Times",
+                  "url": "https://www.manilatimes.net/2026/07/26/business/sunday-business-it/japan-expands-physical-ai-strategy/2391397",
+                  "source": "manilatimes.net",
+                  "summary": "JAPAN is expanding its national strategy for physical artificial intelligence (AI) through a government-backed computing infrastructure project and new collaborations with domestic manufacturers and robotics companies aimed at accelerating industrial automation and AI development. The initiatives, announced during Nvidia's AI conference in Japan, include plans to establish what organizers described as the world's first national AI infrastructure dedicated to physical AI and a broader effort by Japanese industry to develop intelligent machines using AI platforms. Japan's Ministry of Economy, Trade and Industry (METI) is supporting the FRONTia Project, a national program to develop multimodal foundation models for robotics and physical AI. as its computing platform for developing AI agents, robotics, digital twins and other industrial AI applications. Coalition members are expected to contribute to the development of open-world AI models for robotics and industrial applications. According to the announcement, Japan's AI Robotics Strategy aims to capture more than 30 percent of the global AI robotics market by 2040 through investments in AI infrastructure, robotics research and industrial partnerships.",
+                  "score": 0.2417269
+                },
+                {
+                  "title": "Moburst develops AI engine optimization capabilities for established companies - TechCrunch",
+                  "url": "https://techcrunch.com/press-release/moburst-develops-ai-engine-optimization-capabilities-for-established-companies/",
+                  "source": "techcrunch.com",
+                  "summary": "Mobile growth agency Moburst has built out a dedicated AI Engine Optimization practice aimed at established companies with existing app portfolios, betting that the category still lacks agencies with real depth rather than a rebranded service page. AI Engine Optimization, more commonly abbreviated AEO for Answer Engine Optimization, is the practice of structuring a brand’s content and web presence so AI systems such as ChatGPT, Perplexity, and Google’s AI Overviews can confidently cite it when answering a user’s question directly, rather than showing a ranked list of links. For established companies vetting an AEO partner, the practical test is whether the agency can point to specific app-store-side work, not just web content changes, and whether it can describe a concrete process for reconciling inconsistent brand descriptions across many independent sources rather than treating that as someone else’s problem.",
+                  "score": 0.22859572
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "assistant_text": "Dưới đây là những tin tức nổi bật về AI trên web trong tuần này:\n\n*   AI’s Early Winners Are Shopping For Their Next Big Moves - Forbes\n*   AI innovation is outpacing governance, leaving companies exposed, EqualAI warns - Fox Business\n*   5U AI scales up new digital workforce platform - American Journal of Transportation\n*   Japan expands physical AI strategy - The Manila Times\n*   Moburst develops AI engine optimization capabilities for established companies - TechCrunch",
+        "tool_calls": [],
+        "tool_results": []
+      }
+    ],
+    "tool_events": [
+      {
+        "tool": "lookup",
+        "args": {
+          "query": "AI",
+          "topic": "news"
+        },
+        "result": {
+          "tool": "web_search",
+          "query": "AI",
+          "topic": "news",
+          "timeframe": "week",
+          "items": [
+            {
+              "title": "AI’s Early Winners Are Shopping For Their Next Big Moves - Forbes",
+              "url": "https://www.forbes.com/sites/the-prompt/2026/07/28/ais-early-winners-are-shopping-for-their-next-big-moves/",
+              "source": "forbes.com",
+              "summary": "# AI’s Early Winners Are Shopping For Their Next Big Moves. AI startups Midjourney, World Labs and Cognition all announced acquisitions this week. Early winners of the AI wave are on a bit of a shopping spree. The idea is to bring Poke’s personality to Cognition’s coding agent Devin: “It’s proactive, it knows you, and it’s fun to talk to. And Bloomberg reported this week that Midjourney, best known for its AI image generator, acquired popular astrology app Co-Star this spring, as it plans to build its first standalone app. That’s just one of eight new projects the AI startup is pursuing, including a spa with full-body ultrasound machines it plans to open in San Francisco next year (yes, you read that right). Two of OpenAI’s most advanced AI agents **slipped out of the company’s controls** and **hacked into AI startup Hugging Face** to steal the answers for an internal test that evaluated its cyber skills, the company disclosed last week.",
+              "score": 0.30728576
+            },
+            {
+              "title": "AI innovation is outpacing governance, leaving companies exposed, EqualAI warns - Fox Business",
+              "url": "https://www.foxbusiness.com/technology/ai-innovation-outpacing-governance-leaving-companies-exposed-equalai-warns",
+              "source": "foxbusiness.com",
+              "summary": "This week saw a high-profile incident involving AI, in which an internal test of AI models by ChatGPT-maker OpenAI resulted in the models exploiting a software flaw, escaping containment and hacking into Hugging Face, which operates a platform for developers to collaborate on code for AI models, to cheat on a cybersecurity evaluation. EqualAI CEO Miriam Vogel, whose organization released a white paper on AI governance and deployment this week, told FOX Business, \"Innovation is going at an unprecedented pace; the problem is governance is not matching that pace.\". \"While this is, in this instance, an issue for a development company, a lot of where this is playing out and will continue to play out is with the deployer – is with the healthcare, finance, social media, infrastructure – all the other ways [companies are] using agentic AI,\" Vogel said. Companies need to have visibility into the AI tools being used at all levels of a business and across its various divisions to establish governance, Vogel said.",
+              "score": 0.2738345
+            },
+            {
+              "title": "5U AI scales up new digital workforce platform - American Journal of Transportation",
+              "url": "https://www.ajot.com/news/5u-ai-scales-up-new-digital-workforce-platform",
+              "source": "ajot.com",
+              "summary": "“We are not building another chatbot that answers questions and disappears, we are building AI Workers that understand freight operations, carry out the work, and capture the reasoning behind every decision, so teams can scale their knowledge as well as their capacity.”. 5U AI works inside existing freight systems and uses multi-agent AI trained for logistics workflows, including the complex exceptions and manual decisions that make forwarding operations difficult to automate with generic AI tools or legacy automation. The company is already live with forwarders and carriers across Europe, including with TCI International Logistics, where its AI Workers are being used across air and ocean freight operations. 5U AI is growing its team as part of the scale-up, with plans to hire across product, engineering, operations, commercial, and customer functions. “AI is one of the most exciting developments logistics has seen for a generation, but its value will depend on people who understand the industry and want to build practical tools that solve real operational problems,” said Abik.",
+              "score": 0.2506701
+            },
+            {
+              "title": "Japan expands physical AI strategy - The Manila Times",
+              "url": "https://www.manilatimes.net/2026/07/26/business/sunday-business-it/japan-expands-physical-ai-strategy/2391397",
+              "source": "manilatimes.net",
+              "summary": "JAPAN is expanding its national strategy for physical artificial intelligence (AI) through a government-backed computing infrastructure project and new collaborations with domestic manufacturers and robotics companies aimed at accelerating industrial automation and AI development. The initiatives, announced during Nvidia's AI conference in Japan, include plans to establish what organizers described as the world's first national AI infrastructure dedicated to physical AI and a broader effort by Japanese industry to develop intelligent machines using AI platforms. Japan's Ministry of Economy, Trade and Industry (METI) is supporting the FRONTia Project, a national program to develop multimodal foundation models for robotics and physical AI. as its computing platform for developing AI agents, robotics, digital twins and other industrial AI applications. Coalition members are expected to contribute to the development of open-world AI models for robotics and industrial applications. According to the announcement, Japan's AI Robotics Strategy aims to capture more than 30 percent of the global AI robotics market by 2040 through investments in AI infrastructure, robotics research and industrial partnerships.",
+              "score": 0.2417269
+            },
+            {
+              "title": "Moburst develops AI engine optimization capabilities for established companies - TechCrunch",
+              "url": "https://techcrunch.com/press-release/moburst-develops-ai-engine-optimization-capabilities-for-established-companies/",
+              "source": "techcrunch.com",
+              "summary": "Mobile growth agency Moburst has built out a dedicated AI Engine Optimization practice aimed at established companies with existing app portfolios, betting that the category still lacks agencies with real depth rather than a rebranded service page. AI Engine Optimization, more commonly abbreviated AEO for Answer Engine Optimization, is the practice of structuring a brand’s content and web presence so AI systems such as ChatGPT, Perplexity, and Google’s AI Overviews can confidently cite it when answering a user’s question directly, rather than showing a ranked list of links. For established companies vetting an AEO partner, the practical test is whether the agency can point to specific app-store-side work, not just web content changes, and whether it can describe a concrete process for reconciling inconsistent brand descriptions across many independent sources rather than treating that as someone else’s problem.",
+              "score": 0.22859572
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "updated_at": "2026-07-29T11:30:37"
+}
