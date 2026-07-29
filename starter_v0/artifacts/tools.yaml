@@ -70,11 +70,11 @@ tools:
       required: [items, template]
 
   - name: weather
-    description: "Get current weather information for a specified city (e.g. Hanoi, Ho Chi Minh, Da Nang, Tokyo, Paris)."
+    description: "Get current weather for a city, university, or landmark (e.g. Hanoi, Ho Chi Minh, Da Nang, Tokyo, Paris, VinUni, Bách Khoa Hà Nội, Stanford University, Harvard, MIT)."
     parameters:
       type: object
       properties:
-        city: {type: string, default: "Hanoi", description: "Tên thành phố cần xem thời tiết"}
+        city: {type: string, default: "Hanoi", description: "Tên thành phố, trường đại học, hoặc địa danh cần xem thời tiết"}
       required: [city]
 
   # ---------------- Bonus / Optional tools ----------------
