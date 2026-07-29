@@ -1,7 +1,119 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
+  "description": "10 cases nhóm tự thiết kế: 5 single-turn (query) + 5 multi-turn (turns). Tool mới: summarize.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+
+    {
+      "id": "G01_summarize_inline_text",
+      "phase": "B",
+      "query": "Tóm tắt đoạn này giúp mình: 'Artificial intelligence is transforming industries worldwide. Companies are investing billions. Researchers warn of risks to society. Governments are starting to regulate AI development. The pace of change is accelerating rapidly.'",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {"style": "bullets"}}]},
+      "metadata": {"skill": "routing_summarize_inline", "difficulty": "easy", "what_it_tests": "Người dùng cung cấp text trực tiếp + yêu cầu tóm tắt → gọi summarize, KHÔNG gọi lookup hay fetch."}
+    },
+
+    {
+      "id": "G02_summarize_style_tldr",
+      "phase": "B",
+      "query": "Cho mình bản TL;DR ngắn nhất của đoạn sau: 'Large language models have demonstrated remarkable capabilities in reasoning, coding, and creative writing. They are trained on vast datasets from the internet. Fine-tuning techniques allow customization for specific domains.'",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {"style": "tldr"}}]},
+      "metadata": {"skill": "arg_style_tldr", "difficulty": "medium", "what_it_tests": "'TL;DR' → style=tldr, không phải style=bullets hay paragraph."}
+    },
+
+    {
+      "id": "G03_summarize_not_fetch",
+      "phase": "B",
+      "query": "Tóm tắt bài này: https://openai.com/blog/gpt-5",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://openai.com/blog/gpt-5"}}]},
+      "metadata": {"skill": "routing_fetch_not_summarize", "difficulty": "medium", "what_it_tests": "Khi đã có URL, phải fetch trước — KHÔNG gọi summarize trực tiếp với URL."}
+    },
+
+    {
+      "id": "G04_summarize_no_text_missing",
+      "phase": "B",
+      "query": "Tóm tắt lại cho mình nhé",
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+      "metadata": {"skill": "clarify_missing_text", "difficulty": "medium", "what_it_tests": "Yêu cầu tóm tắt nhưng không có text nào → clarify xin nội dung, KHÔNG tự đoán."}
+    },
+
+    {
+      "id": "G05_summarize_out_of_scope",
+      "phase": "B",
+      "query": "Dịch đoạn text này sang tiếng Anh giúp mình: 'Trí tuệ nhân tạo đang thay đổi thế giới.'",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"skill": "out_of_scope_translation", "difficulty": "easy", "what_it_tests": "Yêu cầu dịch thuật ngoài phạm vi công cụ → KHÔNG gọi tool, từ chối lịch sự."}
+    },
+
+    {
+      "id": "G06_multi_fetch_then_summarize",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Đọc bài này cho mình: https://anthropic.com/news/claude"},
+        {"role": "assistant", "content": "Đã đọc xong bài viết về Claude.", "tool_calls": [{"name": "fetch", "args": {"url": "https://anthropic.com/news/claude"}}]},
+        {"role": "user", "content": "Bây giờ tóm tắt nội dung đó thành 3 gạch đầu dòng"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {"style": "bullets", "max_sentences": 3}}]},
+      "metadata": {"skill": "multiturn_fetch_then_summarize", "difficulty": "medium", "what_it_tests": "Sau khi fetch, user yêu cầu tóm tắt → gọi summarize với style=bullets, max_sentences=3."}
+    },
+
+    {
+      "id": "G07_multi_summarize_style_correction",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt đoạn này: 'AI models are becoming more capable each year. GPT-4 showed strong reasoning. Claude excels at long context. Gemini integrates multimodal inputs. Competition drives rapid improvement.'"},
+        {"role": "assistant", "content": "Đã tóm tắt dạng bullets.", "tool_calls": [{"name": "summarize", "args": {"style": "bullets"}}]},
+        {"role": "user", "content": "Đổi sang dạng paragraph đi, giữ nguyên text đó"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {"style": "paragraph"}}]},
+      "metadata": {"skill": "multiturn_style_correction", "difficulty": "medium", "what_it_tests": "User sửa style từ bullets → paragraph, giữ nguyên text đầu vào."}
+    },
+
+    {
+      "id": "G08_multi_summarize_max_sentences",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt đoạn này: 'Machine learning is a subset of AI. Deep learning uses neural networks. Transformers changed NLP. BERT introduced bidirectional encoding. GPT uses autoregressive generation. Reinforcement learning trains agents.'"},
+        {"role": "assistant", "content": "Đã tóm tắt.", "tool_calls": [{"name": "summarize", "args": {"style": "bullets", "max_sentences": 5}}]},
+        {"role": "user", "content": "Ngắn hơn nữa, chỉ 2 dòng thôi"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {"max_sentences": 2}}]},
+      "metadata": {"skill": "multiturn_max_sentences_correction", "difficulty": "hard", "what_it_tests": "User yêu cầu rút ngắn hơn → sửa max_sentences=2, giữ nguyên text và style."}
+    },
+
+    {
+      "id": "G09_multi_clarify_then_summarize",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt lại cho mình nhé"},
+        {"role": "assistant", "content": "Bạn muốn tóm tắt nội dung nào?", "tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+        {"role": "user", "content": "Đây: 'The rise of foundation models marks a paradigm shift in AI. These models are trained once and adapted to many tasks. They reduce the need for task-specific datasets.'"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {"style": "bullets"}}]},
+      "metadata": {"skill": "multiturn_clarify_then_summarize", "difficulty": "hard", "what_it_tests": "Sau khi clarify, user cung cấp text → gọi summarize với text đó, KHÔNG clarify lại."}
+    },
+
+    {
+      "id": "G10_multi_no_summarize_has_url",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt bài này: https://huggingface.co/blog/llama3"},
+        {"role": "assistant", "content": "Đang đọc bài...", "tool_calls": [{"name": "fetch", "args": {"url": "https://huggingface.co/blog/llama3"}}]},
+        {"role": "user", "content": "Vẫn tóm tắt bài đó thôi, không cần tìm thêm gì"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {"style": "bullets"}}]},
+      "metadata": {"skill": "multiturn_confirm_summarize_after_fetch", "difficulty": "medium", "what_it_tests": "Sau fetch, user xác nhận chỉ tóm tắt bài vừa đọc → gọi summarize, KHÔNG gọi lookup hay fetch lại."}
+    }
+
+  ]
 }

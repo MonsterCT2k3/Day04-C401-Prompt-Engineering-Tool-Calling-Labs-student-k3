@@ -9,43 +9,69 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: |
+      Gửi câu hỏi làm rõ tới người dùng khi thiếu thông tin bắt buộc để gọi tool.
+      Dùng khi: thiếu Twitter handle (cho timeline), thiếu URL (cho fetch), thiếu text (cho summarize).
+      Dùng khi: người dùng yêu cầu gửi/đăng nội dung → hỏi xác nhận bằng response_type=yes_no TRƯỚC khi gửi.
+      KHÔNG đoán hay tự điền thông tin còn thiếu. KHÔNG gọi clarify khi đã có đủ thông tin.
+      response_type: 'text' để hỏi thông tin tự do; 'yes_no' để xác nhận hành động; 'choice' khi cần chọn một trong các option.
     parameters:
       type: object
       properties:
-        question: {type: string, default: "", description: "Câu hỏi"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
-        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
+        question: {type: string, default: "", description: "Câu hỏi gửi tới người dùng"}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời mong đợi"}
+        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn (chỉ dùng khi response_type=choice)"}
       required: [question]
 
   - name: timeline
-    description: "Lấy các bài đăng gần đây."
+    description: |
+      Lấy các tweet/bài đăng gần nhất CỦA một tài khoản Twitter cụ thể theo tên handle.
+      Dùng khi: người dùng hỏi về tweet/bài đăng của một người cụ thể ("tweet của X", "X viết gì").
+      KHÔNG dùng khi tìm theo chủ đề/từ khóa → dùng social_search thay thế.
+      screenname: Twitter handle KHÔNG có '@'. Phải map tên thật sang handle:
+        Sam Altman → sama | Elon Musk → elonmusk | Andrej Karpathy → karpathy
+        Yann LeCun → ylecun | Greg Brockman → gdb | Demis Hassabis → demishassabis
+      Nếu không biết handle, gọi clarify để hỏi thay vì đoán.
+      limit: số nguyên (integer), mặc định 5. Trích đúng con số từ yêu cầu ("10 tweet" → limit=10).
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Tên tài khoản"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        screenname: {type: string, default: "", description: "Twitter handle không có @ (ví dụ: sama, elonmusk)"}
+        limit: {type: integer, default: 5, description: "Số tweet cần lấy (integer, mặc định 5)"}
       required: [screenname]
 
   - name: social_search
-    description: "Tìm trên mạng xã hội."
+    description: |
+      Tìm kiếm tweet/bài đăng trên Twitter theo từ khóa hoặc chủ đề.
+      Dùng khi: tìm kiếm theo chủ đề, hashtag, hoặc từ khóa ("mọi người đang nói gì về X").
+      KHÔNG dùng để lấy tweet của một tài khoản cụ thể → dùng timeline thay thế.
+      query: từ khóa tìm kiếm, lấy ngắn gọn từ yêu cầu của người dùng (ví dụ: "AI", "GPT-5", "OpenAI").
+      search_type: 'Latest' (mặc định) cho tweet mới nhất; 'Top' CHỈ khi người dùng nói 'phổ biến', 'top', 'nhiều like'.
+      limit: số nguyên (integer), mặc định 5.
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Cách sắp xếp"}
-        limit: {type: integer, default: 5, description: "Số lượng"}
+        query: {type: string, default: "", description: "Từ khóa tìm kiếm (ngắn gọn, ví dụ: 'AI', 'GPT-5')"}
+        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Latest (mặc định) hoặc Top (chỉ khi user nói top/phổ biến)"}
+        limit: {type: integer, default: 5, description: "Số kết quả (integer)"}
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: |
+      Tìm kiếm thông tin trên web qua Tavily.
+      Dùng khi: tìm tin tức, sự kiện, thông tin nền, hoặc khi người dùng hỏi về một chủ đề mà không có URL.
+      KHÔNG dùng khi đã có URL cụ thể → dùng fetch thay thế.
+      query: trích từ khóa cốt lõi từ yêu cầu, GIỮ NGẮN GỌN (ví dụ: 'AI', 'robotics', 'OpenAI'). KHÔNG thêm từ như 'today', 'news', 'hôm nay' vào query — thông tin đó đặt ở topic/timeframe.
+      topic: 'news' khi người dùng hỏi tin tức/sự kiện/thời sự; 'general' cho tra cứu thông tin nền.
+      timeframe: 'day' cho "hôm nay/today/mới nhất"; 'week' (mặc định) cho "tuần này/gần đây"; 'month' cho "tháng này"; 'year' cho dài hạn.
+      max_results: số nguyên (integer), mặc định 5.
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
-        max_results: {type: integer, default: 5, description: "Số kết quả"}
+        query: {type: string, default: "", description: "Từ khóa cốt lõi, ngắn gọn (ví dụ: 'AI', 'robotics'). Không thêm 'hôm nay' hay 'news'."}
+        topic: {type: string, enum: [general, news], default: "general", description: "'news' cho tin tức/thời sự; 'general' cho tra cứu thông tin"}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "'day'=hôm nay, 'week'=tuần này (mặc định), 'month', 'year'"}
+        max_results: {type: integer, default: 5, description: "Số kết quả (integer)"}
       required: [query]
 
   - name: fetch
@@ -77,42 +103,95 @@ tools:
         headline: {type: string, default: "", description: "Tiêu đề"}
       required: [items, template]
 
-  # ---------------- Bonus tools ----------------
-  - name: send
-    description: "Gửi một đoạn văn bản đi."
+  - name: summarize
+    description: |
+      Tóm tắt một đoạn văn bản dài thành bản ngắn hơn.
+      Dùng khi: người dùng cung cấp văn bản trực tiếp và yêu cầu 'tóm tắt', 'rút gọn', 'cho ngắn lại'.
+      Cũng dùng sau fetch/lookup khi người dùng muốn tóm tắt nội dung vừa lấy được.
+      KHÔNG dùng khi: người dùng chưa cung cấp văn bản nào — hãy fetch hoặc lookup trước.
+      KHÔNG dùng thay cho fetch khi đã có URL.
+      KHÔNG dùng để tìm kiếm.
+      style mặc định là 'bullets'; dùng 'tldr' cho bản tóm tắt một câu; 'paragraph' cho văn xuôi liên tục.
+      max_sentences mặc định là 5.
     parameters:
       type: object
       properties:
-        text: {type: string, default: "", description: "Nội dung"}
-        confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
+        text: {type: string, default: "", description: "Văn bản cần tóm tắt (bắt buộc)"}
+        style: {type: string, enum: [bullets, paragraph, tldr], default: "bullets", description: "Định dạng đầu ra"}
+        max_sentences: {type: integer, default: 5, description: "Số câu/gạch đầu dòng tối đa"}
       required: [text]
 
-  - name: policy
-    description: "Tìm trong tài liệu nội bộ."
-    parameters:
-      type: object
-      properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Nhóm"}
-        top_k: {type: integer, default: 3, description: "Số mục"}
-      required: [query]
 
-  - name: papers
-    description: "Tìm bài báo khoa học."
-    parameters:
-      type: object
-      properties:
-        query: {type: string, default: "", description: "Từ khóa"}
-        max_results: {type: integer, default: 5, description: "Số lượng"}
-        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sắp xếp"}
-      required: [query]
+  # ---------------- Bonus tools ----------------
+  # - name: send
+  #   description: "Gửi một đoạn văn bản đi."
+  #   parameters:
+  #     type: object
+  #     properties:
+  #       text: {type: string, default: "", description: "Nội dung"}
+  #       confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
+  #     required: [text]
 
-  - name: paper_text
-    description: "Lấy nội dung text của một bài báo."
+  # - name: policy
+  #   description: "Tìm trong tài liệu nội bộ."
+  #   parameters:
+  #     type: object
+  #     properties:
+  #       query: {type: string, default: "", description: "Truy vấn"}
+  #       policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Nhóm"}
+  #       top_k: {type: integer, default: 3, description: "Số mục"}
+  #     required: [query]
+
+  # - name: papers
+  #   description: "Tìm bài báo khoa học."
+  #   parameters:
+  #     type: object
+  #     properties:
+  #       query: {type: string, default: "", description: "Từ khóa"}
+  #       max_results: {type: integer, default: 5, description: "Số lượng"}
+  #       sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sắp xếp"}
+  #     required: [query]
+
+  # - name: paper_text
+  #   description: "Lấy nội dung text của một bài báo."
+  #   parameters:
+  #     type: object
+  #     properties:
+  #       arxiv_url: {type: string, default: "", description: "ID hoặc địa chỉ"}
+  #       max_pages: {type: integer, default: 5, description: "Số trang"}
+  #       max_chars: {type: integer, default: 8000, description: "Số ký tự"}
+  #     required: [arxiv_url]
+
+  # ---------------- Rental Tools ----------------
+  - name: search_apartments
+    description: |
+      Tìm kiếm nhà trọ hoặc căn hộ cho thuê dựa trên các tiêu chí: khu vực, giá cả, và loại phòng.
     parameters:
       type: object
       properties:
-        arxiv_url: {type: string, default: "", description: "ID hoặc địa chỉ"}
-        max_pages: {type: integer, default: 5, description: "Số trang"}
-        max_chars: {type: integer, default: 8000, description: "Số ký tự"}
-      required: [arxiv_url]
+        location: {type: string, default: "", description: "Khu vực muốn tìm (VD: 'Cầu Giấy', 'Quận 1')"}
+        min_price: {type: integer, default: 0, description: "Giá tối thiểu (VNĐ)"}
+        max_price: {type: integer, default: 100000000, description: "Giá tối đa (VNĐ)"}
+        room_type: {type: string, enum: [phong_tro, chung_cu_mini, chung_cu, nha_nguyen_can], default: "phong_tro", description: "Loại phòng"}
+      required: [location]
+
+  - name: get_apartment_details
+    description: |
+      Lấy thông tin chi tiết của một nhà trọ/căn hộ dựa trên ID (địa chỉ cụ thể, nội thất, điện nước, SĐT chủ).
+    parameters:
+      type: object
+      properties:
+        apartment_id: {type: string, description: "ID của căn hộ (được trả về từ search_apartments)"}
+      required: [apartment_id]
+
+  - name: book_viewing
+    description: |
+      Đặt lịch hẹn đến xem nhà trọ/căn hộ. Yêu cầu có đầy đủ ID, tên, SĐT và thời gian hẹn.
+    parameters:
+      type: object
+      properties:
+        apartment_id: {type: string, description: "ID của căn hộ"}
+        customer_name: {type: string, description: "Tên người đặt"}
+        phone_number: {type: string, description: "Số điện thoại liên hệ"}
+        viewing_time: {type: string, description: "Thời gian muốn xem (VD: '15h chiều mai')"}
+      required: [apartment_id, customer_name, phone_number, viewing_time]
