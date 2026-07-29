@@ -2,9 +2,11 @@
 
 ## Team
 
-- Team: AI20k - Group Research Agent
-- Members: Student Team
-- Provider/model: NVIDIA NIM / `meta/llama-3.1-70b-instruct`
+Nguyễn Đăng Nam - 2A202601307
+Nguyễn Hữu Tuyền - 2A202601605
+Tống Nguyễn Minh Khang - 2A202601101
+Đậu Quốc Duy - 2A202601445
+Lê Chí Anh Tuấn - 2A202601149
 
 ---
 
@@ -63,17 +65,27 @@ Dữ liệu tổng hợp từ `artifacts/version_log.csv` và `runs/*.json`:
 | **v0** | starter_defaults | Baseline prompt xúi đoán bừa và không dùng clarify làm phát sinh nhiều lỗi | case_accuracy | 0.00 | **0.30** | `runs/v0_B_base_nvidia_20260729T100943461328.json` |
 | **v1** | system_prompt.md + tools.yaml | Bổ sung quy tắc clarify cho thông tin rỗng/xác nhận send và mapping handle sama | case_accuracy | 0.30 | **0.70** | `runs/v1_B_base_nvidia_20260729T102421659361.json` |
 | **v2** | system_prompt.md + tools.yaml | Thêm quy tắc query clean (lọc bỏ từ thời gian) và mô tả kiểu số nguyên cho limit | case_accuracy | 0.70 | **0.65** | `runs/v2_B_base_nvidia_20260729T103706595091.json` |
-| **v3** | system_prompt.md + tools.yaml | Ví dụ định dạng limit dạng số giúp sửa R05 nhưng việc hạn chế clarify làm ngưng gọi clarify ở R10/R11/R12 | case_accuracy | 0.65 | **0.60** | `runs/v3_B_base_nvidia_20260729T104821406706.json` |
+| **v3** | system_prompt.md + tools.yaml | Surgical fix: thêm STRICT JSON Argument Types (ép integer), query cleaning, và ví dụ clarify cụ thể khi thiếu handle — sửa R03/R09/R10/R11/R12/R14 mà không gây tác dụng phụ | case_accuracy | 0.65 | **0.80** | `runs/v3_B_base_nvidia_20260729T145815559416.json` |
 
 ## B2. Failure analysis
 
-| Case ID | Failure Type | Actual Tool Calls | What Failed | Fix |
+**Các lỗi đã sửa được qua các version:**
+
+| Case ID | Version phát hiện | Failure Type | What Failed | Fix Applied | Kết quả |
+|---|---|---|---|---|---|
+| `R01_user_tweets_routing` | $v0$ | `wrong_tool` | Model đoán bừa handle `samaltman` | Thêm rule mapping `Sam Altman -> sama` | ✅ PASS từ $v1$ |
+| `R03_web_news_routing` | $v1$ | `wrong_tool` | Query dính từ rác `"Tin túc AI hôm nay"` | Thêm quy tắc Query Cleaning | ✅ PASS từ $v3$ |
+| `R10_missing_handle` | $v0$ | `missing_info` | Gọi `social_search(query="")` thay vì hỏi lại | Thêm ví dụ clarify cụ thể khi thiếu handle | ✅ PASS từ $v3$ |
+| `R12_confirm_before_send` | $v0$ | `wrong_boundary` | Tự gửi tin nhắn không xin phép | Yêu cầu `clarify(response_type="yes_no")` trước `send` | ✅ PASS từ $v1$ |
+
+**Các lỗi còn lại ở $v3$ (model-level, không sửa được bằng prompt):**
+
+| Case ID | Failure Type | Expected | Actual | Root Cause |
 |---|---|---|---|---|
-| `R01_user_tweets_routing` ($v0$) | `wrong_tool` | `timeline(screenname="samaltman")` | Model đoán bừa handle `samaltman` | Thêm rule mapping `Sam Altman -> sama` vào system prompt |
-| `R03_web_news_routing` ($v1$) | `wrong_tool` | `lookup(query="Tin túc AI hôm nay")` | Query bị dính từ chỉ thời gian rác | Thêm quy tắc Query Cleaning: chỉ lấy từ khóa chính `"AI"` |
-| `R05_limit_arg` ($v1$) | `wrong_arg_value` | `timeline(limit="10")` | Truyền `limit` dạng string `"10"` | Nhấn mạnh `limit` phải là số nguyên Integer trong system prompt & tools.yaml |
-| `R10_missing_handle` ($v0$) | `missing_info` | `social_search(query="")` | Gọi tool với query rỗng | Yêu cầu bắt buộc gọi `clarify` hỏi người dùng khi thiếu handle |
-| `R12_confirm_before_send` ($v0$) | `wrong_boundary` | `send(...)` | Tự gửi tin nhắn không xin phép | Yêu cầu bắt buộc gọi `clarify(response_type="yes_no")` xác nhận trước |
+| `R05_limit_arg` | `wrong_arg_value` | `timeline(limit=10)` | `timeline(limit="10")` | Llama-3.1-70B serialize số thành string trong JSON tool call |
+| `M01_clarify_then_fill` | `wrong_arg_value` | `timeline(limit=5)` | `timeline(limit="5")` | Cùng nguyên nhân — integer bị quote thành string |
+| `M03_correction_handle` | `wrong_arg_value` | `timeline(limit=3)` | `timeline(limit="3")` | Cùng nguyên nhân — integer bị quote thành string |
+| `M05_correction_limit` | `wrong_arg_value` | `timeline(limit=3)` | `timeline(limit="3")` | Cùng nguyên nhân — integer bị quote thành string |
 
 ## B3. Team eval cases
 
@@ -98,9 +110,9 @@ Bằng chứng thực thi qua UI / chat loop (`app.py` / `chat.py`):
 
 | Scenario/Turn | Version | Tool Calls + Args | Transcript/Run | Outcome |
 |---|---|---|---|---|
-| Tra cứu thời tiết Hà Nội | v1 | `weather(city="Hanoi")` | `transcripts/live_demo.json` | Trả về 29°C, Cloudy/Rain thực tế từ Open-Meteo API |
-| Xem tin tức AI thời sự | v1 | `lookup(query="AI", topic="news", timeframe="day")` | `transcripts/live_demo.json` | Trả về 5 tin tức AI thời sự cập nhật trong ngày |
-| Hỏi xin xác nhận Telegram | v1 | `clarify(question=..., response_type="yes_no")` | `transcripts/live_demo.json` | Dừng và hiển thị form Yes/No cho người dùng |
+| Tra cứu thời tiết Hà Nội | v3 | `weather(city="Hanoi")` | `transcripts/live_demo.json` | Trả về 29°C, Cloudy/Rain thực tế từ Open-Meteo API |
+| Xem tin tức AI thời sự | v3 | `lookup(query="AI", topic="news", timeframe="day")` | `transcripts/live_demo.json` | Trả về 5 tin tức AI thời sự cập nhật trong ngày |
+| Hỏi xin xác nhận Telegram | v3 | `clarify(question=..., response_type="yes_no")` | `transcripts/live_demo.json` | Dừng và hiển thị form Yes/No cho người dùng |
 
 ## B5. Tool capability evidence
 
@@ -114,5 +126,6 @@ Bằng chứng thực thi qua UI / chat loop (`app.py` / `chat.py`):
 
 - **Chỉnh sửa trong `system_prompt.md`**: Phù hợp cho việc điều phối luồng tư duy (routing), đưa ra nguyên tắc bắt buộc gọi `clarify` khi thiếu thông tin, thiết lập quy tắc xác nhận trước hành động nhạy cảm, và quy định mapping tên thành handle.
 - **Chỉnh sửa trong `tools.yaml`**: Phù hợp cho việc mô tả chi tiết chức năng của từng tool, quy định kiểu dữ liệu tham số (ép kiểu `integer` cho limit/max_results) và giúp LLM hiểu đúng ý định sử dụng tool.
-- **Lỗi cần review thủ công**: Các trường hợp LLM gọi đúng tên tool nhưng truyền tham số dạng string `"5"` thay vì int `5` hoặc trường hợp LLM over-clarify ở các câu toán học/coding out-of-scope.
+- **Bài học từ v2/v3 cũ**: Over-constraining (hạn chế clarify quá mức cho math/coding) gây tác dụng phụ nghiêm trọng — model ngưng luôn cả clarify ở các trường hợp thực sự cần hỏi lại (R10, R11, R12). Chiến lược "surgical fix" (sửa phẫu thuật chính xác, chỉ thêm quy tắc nhắm trúng lỗi cụ thể) hiệu quả hơn nhiều so với thêm nhiều ràng buộc cùng lúc.
+- **Lỗi còn lại (model-level)**: 4 case FAIL còn lại (R05, M01, M03, M05) đều do Llama-3.1-70B serialize `limit` dưới dạng string `"5"` thay vì integer `5` trong JSON tool call. Đây là hạn chế cố hữu của model, không thể sửa hoàn toàn bằng prompt engineering.
 - **Hướng cải thiện tiếp theo**: Xây dựng cơ chế tự động parse/type-cast tham số ở tầng tool execution để chuyển chuỗi `"5"` thành số `5` trước khi validate, giúp tăng thêm tính ổn định cho Agent.

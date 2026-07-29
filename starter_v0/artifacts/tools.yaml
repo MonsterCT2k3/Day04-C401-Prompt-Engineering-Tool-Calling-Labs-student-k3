@@ -78,6 +78,28 @@ tools:
       required: [city]
 
   # ---------------- Bonus / Optional tools ----------------
+  - name: place_search
+    description: "Find restaurants, cafes, bars, or entertainment venues near a city, university, or landmark (e.g. VinUni, Bách Khoa Hà Nội, Hồ Gươm)."
+    parameters:
+      type: object
+      properties:
+        location: {type: string, default: "", description: "Tên khu vực/thành phố/trường/địa danh cần tìm quanh đó"}
+        category: {type: string, default: "an uong", description: "Loại địa điểm: an uong (nhà hàng/quán ăn), cafe, bar, vui choi (giải trí), cong vien (công viên)"}
+        radius_km: {type: number, default: 1.5, description: "Bán kính tìm kiếm (km)"}
+        top_k: {type: integer, default: 5, description: "Số lượng kết quả tối đa"}
+      required: [location]
+
+  - name: book_reservation
+    description: "Reserve a table/slot at a place found via place_search. Require prior confirmation via clarify (this is a simulated booking for demo purposes)."
+    parameters:
+      type: object
+      properties:
+        place_name: {type: string, default: "", description: "Tên địa điểm cần đặt chỗ"}
+        when: {type: string, default: "", description: "Thời gian đặt chỗ (ngày giờ)"}
+        party_size: {type: integer, default: 2, description: "Số người"}
+        confirmed: {type: boolean, default: false, description: "Cờ đã xác nhận với người dùng"}
+      required: [place_name, when]
+
   - name: send
     description: "Send or publish a message to Telegram channel. Require prior confirmation via clarify."
     parameters:

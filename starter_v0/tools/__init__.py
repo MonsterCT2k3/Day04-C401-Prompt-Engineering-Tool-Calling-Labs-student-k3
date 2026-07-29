@@ -18,6 +18,8 @@ from .social_search.tool import search_tweets
 from .send.tool import send_telegram
 from .lookup.tool import web_search
 from .weather.tool import get_weather
+from .place_search.tool import find_places
+from .book_reservation.tool import book_reservation
 
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
@@ -37,6 +39,8 @@ TOOL_FUNCTIONS = {
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
     "weather": get_weather,
+    "place_search": find_places,
+    "book_reservation": book_reservation,
 }
 
 

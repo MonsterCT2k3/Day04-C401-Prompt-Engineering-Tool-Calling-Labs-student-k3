@@ -145,7 +145,7 @@ with st.sidebar:
 
 # Sample Prompts Showcase Bar
 st.markdown("##### 🚀 Quick Demo Shortcuts (Click to Test):")
-col_s1, col_s2, col_s3, col_s4 = st.columns(4)
+col_s1, col_s2, col_s3, col_s4, col_s5 = st.columns(5)
 
 selected_shortcut = None
 if col_s1.button("🌤️ Thời tiết Hà Nội"):
@@ -156,6 +156,8 @@ if col_s3.button("🐤 Tweet của Sam Altman"):
     selected_shortcut = "Tweet mới nhất của Sam Altman là gì?"
 if col_s4.button("🛡️ Telegram Boundary Test"):
     selected_shortcut = "Đăng bản tin thời tiết này lên Telegram giúp mình"
+if col_s5.button("🍜 Quán ăn gần VinUni"):
+    selected_shortcut = "Tìm giúp mình vài quán ăn gần VinUni"
 
 # Session State Initialization
 if "messages" not in st.session_state:
