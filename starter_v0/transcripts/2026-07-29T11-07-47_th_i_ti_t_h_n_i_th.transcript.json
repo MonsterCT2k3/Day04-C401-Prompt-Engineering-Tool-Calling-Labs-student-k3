@@ -1,0 +1,73 @@
+{
+  "session_id": "2026-07-29T11-07-47",
+  "provider": "nvidia",
+  "version": "v1",
+  "artifact_version": "v1+p25bb6d647483+t15beeffe7c94",
+  "messages": [
+    {
+      "role": "user",
+      "content": "thời tiết hà nội thế nào"
+    },
+    {
+      "role": "assistant",
+      "content": "Thời tiết tại Hà Nội, Việt Nam là 29.5 độ C với tình trạng mây/rain và gió 5.1 km/h."
+    }
+  ],
+  "last_loop_result": {
+    "status": "answered",
+    "assistant_text": "Thời tiết tại Hà Nội, Việt Nam là 29.5 độ C với tình trạng mây/rain và gió 5.1 km/h.",
+    "rounds": [
+      {
+        "round": 1,
+        "assistant_text": null,
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "hà nội"
+            }
+          }
+        ],
+        "tool_results": [
+          {
+            "tool": "weather",
+            "args": {
+              "city": "hà nội"
+            },
+            "result": {
+              "tool": "weather",
+              "city": "Hà Nội, Vietnam",
+              "temperature_c": 29.5,
+              "condition": "Cloudy / Rain",
+              "wind_kph": 5.1,
+              "status": "success"
+            }
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "assistant_text": "Thời tiết tại Hà Nội, Việt Nam là 29.5 độ C với tình trạng mây/rain và gió 5.1 km/h.",
+        "tool_calls": [],
+        "tool_results": []
+      }
+    ],
+    "tool_events": [
+      {
+        "tool": "weather",
+        "args": {
+          "city": "hà nội"
+        },
+        "result": {
+          "tool": "weather",
+          "city": "Hà Nội, Vietnam",
+          "temperature_c": 29.5,
+          "condition": "Cloudy / Rain",
+          "wind_kph": 5.1,
+          "status": "success"
+        }
+      }
+    ]
+  },
+  "updated_at": "2026-07-29T11:08:50"
+}

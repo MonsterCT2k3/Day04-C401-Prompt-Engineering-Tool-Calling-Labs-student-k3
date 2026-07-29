@@ -1,7 +1,239 @@
 {
-  "dataset_id": "day04_v2_research_group",
+  "dataset_id": "day04_v2_team_eval_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "Bộ 10 eval cases của nhóm (5 single-turn + 5 multi-turn) thử nghiệm tool weather mới và các kịch bản thực tế.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_weather_hanoi",
+      "phase": "B",
+      "query": "Thời tiết Hà Nội hôm nay thế nào?",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hanoi"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Tra cứu thời tiết Hà Nội -> gọi weather tool."
+      }
+    },
+    {
+      "id": "G02_weather_tokyo",
+      "phase": "B",
+      "query": "Thời tiết ở Tokyo hiện tại thế nào?",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Tokyo"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Tra cứu thời tiết Tokyo -> truyền đúng city=Tokyo."
+      }
+    },
+    {
+      "id": "G03_missing_city_weather",
+      "phase": "B",
+      "query": "Xem thời tiết hôm nay giúp mình",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Thiếu tên thành phố -> gọi clarify hỏi lại."
+      }
+    },
+    {
+      "id": "G04_company_policy_privacy",
+      "phase": "B",
+      "query": "Tìm quy định về bảo mật dữ liệu riêng tư trong công ty",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "policy",
+            "args": {
+              "query": "bảo mật dữ liệu",
+              "policy_area": "data_privacy"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Tra cứu chính sách nội bộ -> gọi policy tool."
+      }
+    },
+    {
+      "id": "G05_arxiv_papers_search",
+      "phase": "B",
+      "query": "Tìm các bài báo khoa học mới về Large Language Models trên arXiv",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "Large Language Models"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Tìm bài báo khoa học -> gọi papers tool."
+      }
+    },
+    {
+      "id": "GM01_weather_switch_city",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Thời tiết ở Hà Nội hôm nay thế nào?"
+        },
+        {
+          "role": "user",
+          "content": "À đổi sang xem thời tiết ở Đà Nẵng đi"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Da Nang"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: đổi thành phố từ Hà Nội sang Đà Nẵng."
+      }
+    },
+    {
+      "id": "GM02_weather_to_news",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Thời tiết TP HCM thế nào?"
+        },
+        {
+          "role": "user",
+          "content": "Thôi không xem thời tiết nữa, chuyển sang tìm tin tức AI hôm nay"
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: đổi từ xem thời tiết sang xem tin tức AI."
+      }
+    },
+    {
+      "id": "GM03_clarify_then_send",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Gửi bản tin thời tiết này lên Telegram giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Mình xác nhận đồng ý gửi nhé"
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: sau khi xác nhận yes, tiến hành gửi qua send."
+      }
+    },
+    {
+      "id": "GM04_cancel_request",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm bài báo arXiv về Transformer"
+        },
+        {
+          "role": "user",
+          "content": "Thôi hủy đi, mình tự tìm được rồi, cảm ơn bạn"
+        }
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: user hủy yêu cầu -> không gọi tool nào."
+      }
+    },
+    {
+      "id": "GM05_out_of_scope_math",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Xem thời tiết Hà Nội"
+        },
+        {
+          "role": "user",
+          "content": "Tiện thể tính giúp mình 125 * 38 xem bằng bao nhiêu"
+        }
+      ],
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: câu toán học đơn giản -> trả lời thẳng, không gọi tool."
+      }
+    }
+  ]
 }
